@@ -4,7 +4,10 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.grid.GridPanel, {
 
     // Apply configuration.
     Ext.apply(this, {
-		tbar: [{text: 'New'}, {text: 'Delete'}],
+		tbar: [{text: 'New', handler: newAction.createDelegate(this)},
+		       {text: 'Update', handler: updateAction.createDelegate(this)},
+		       {text: 'Delete', handler: deleteAction.createDelegate(this)}
+		      ],
 		id: 'grid'
 	      });
 
@@ -39,7 +42,8 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.grid.GridPanel, {
 					 padding: '10px 0 10px 0'
 				       },
 				       collapsible: true,
-				       titleCollapse: true
+				       titleCollapse: true,
+				       collapsed: true
 				     },
 				     this.form));
 
@@ -50,23 +54,37 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.grid.GridPanel, {
     // Add buttons to the form.
     function addButtons() {
 
-      this.form.addButton({text: 'Create'},
+      this.form.addButton({text: 'Save'},
 			  function() {
-			    this.form.getForm().submit({url:'/recipes/create.json', waitMsg:'Creating new item ...'});
+			    if(this.currId)
+			      this.form.getForm().submit({url: this.restfulPaths.update + this.currId + '.json', waitMsg:'Updating item ...'});
+			    else
+			      this.form.getForm().submit({url: this.restfulPaths.create + '.json', waitMsg:'Creating new item ...'});
     			  },
 			  this);
 
-      this.form.addButton({text: 'Update'},
+      this.form.addButton({text: 'Cancel'},
 			  function() {
-			    this.form.getForm().submit({url:'/recipes/update/' + this.currId + '.json', waitMsg:'Updating item ...'});
+			    this.form.getForm().reset();
 			  },
 			  this);
+    }
 
-      this.form.addButton({text: 'Delete'},
-			  function() {
-			    this.form.getForm().submit({url:'/recipes/delete/' + this.currId + '.json', waitMsg:'Deleting item ...'});
-			  },
-			  this);
+    function updateAction() {
+      this.form.expand();
+    }
+
+    function newAction() {
+      this.currId = null;
+      this.form.getForm().reset();
+      this.form.expand();
+    }
+
+    function deleteAction() {
+      this.getSelectionModel().each(function(s){
+	this.form.getForm().submit({url: this.restfulPaths.delete + s.data.id + '.json', waitMsg:'Deleting item ...'});
+      },
+      this);
     }
 
     // Reload datastore when an actioncomplete event is triggered.
