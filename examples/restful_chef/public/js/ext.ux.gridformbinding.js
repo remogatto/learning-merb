@@ -14,6 +14,8 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.grid.GridPanel, {
     // Call superclass constructor.
     Ext.ux.GridFormBinding.superclass.initComponent.call(this, arguments);
 
+    this.getView().emptyText = 'The database is empty.';
+
     initForm.call(this);
     addSelectionEvents.call(this);
 
