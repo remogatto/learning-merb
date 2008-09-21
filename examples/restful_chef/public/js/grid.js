@@ -3,7 +3,7 @@ Ext.onReady(function() {
 
   var myStore = new Ext.data.JsonStore({
 		  url: '/recipes.json',
-		  fields: ['id', 'name'],
+		  fields: ['id', 'name', 'level'],
 		  autoLoad: true
   });
 
@@ -31,7 +31,19 @@ Ext.onReady(function() {
 					    title: 'Dettagli Ricetta',
 					    frame: true,
 					    defaultType: 'textfield',
-					    items: [{fieldLabel: 'Ricetta', name: 'name', allowBlank: false}, {hideLabel: true, hidden: true, name: 'id'}]
+					    items: [
+					      {fieldLabel: 'Ricetta', name: 'name', allowBlank: false},
+
+					      new Ext.form.ComboBox({
+						mode: 'local',
+						name: 'level',
+						//editable: false,
+						fieldLabel: 'Difficoltà',
+						store: ['Alta', 'Media', 'Bassa']
+					      }),
+
+					      {hideLabel: true, hidden: true, name: 'id'}
+					    ]
 					  }
 					});
 
