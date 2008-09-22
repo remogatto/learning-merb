@@ -10,23 +10,31 @@ Ext.onReady(function() {
   var sm = new Ext.grid.CheckboxSelectionModel();
 
   var grid = new Ext.ux.GridFormBinding({
-					  store: myStore,
 					  restfulPaths: {
 					    create: '/recipes/create',
 					    update: '/recipes/update/',
 					    delete: '/recipes/delete/'
 					  },
+
 					  title: 'Ricette',
 					  width: 400,
-					  autoHeight: true,
-					  autoExpandColumn: 'nome',
-					  stripeRows: true,
-					  sm: sm,
-					  columns: [
-					    sm,
-					    {header: 'Id', sortable: true, dataIndex: 'id'},
-					    {id: 'nome', header: 'Nome', sortable: true, dataIndex: 'name'}
-					  ],
+
+					  grid: {
+					    store: myStore,
+					    autoHeight: true,
+					    autoExpandColumn: 'nome',
+					    stripeRows: true,
+					    sm: new Ext.grid.CheckboxSelectionModel(),
+					    columns: [
+					      sm,
+					      {header: 'Id', sortable: true, dataIndex: 'id'},
+					      {id: 'nome', header: 'Nome', sortable: true, dataIndex: 'name'}
+					    ],
+					    viewConfig: {
+					      emptyText: 'Your database is empty.'
+					    }
+					  },
+
 					  form: {
 					    title: 'Dettagli Ricetta',
 					    frame: true,
@@ -45,6 +53,7 @@ Ext.onReady(function() {
 					      {hideLabel: true, hidden: true, name: 'id'}
 					    ]
 					  }
+
 					});
 
   grid.render(document.body);
