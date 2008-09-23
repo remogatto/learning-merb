@@ -2,7 +2,7 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
 
   initComponent: function() {
 
-    var form_config = Ext.apply(this.form,
+    var form_config = Ext.applyIf(this.form,
 				{
 				  xtype: 'form',
 				  id: 'form',
@@ -24,10 +24,11 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
 				  buttons: [
 				    {text: 'Save', handler: save.createDelegate(this)},
 				    {text: 'Cancel', handler: cancel.createDelegate(this)}
-				  ]
+				  ],
+				  rowSelectHandler: rowSelectHandler.createDelegate(this)
 				});
 
-    var grid_config = Ext.apply(this.grid,
+    var grid_config = Ext.applyIf(this.grid,
 				{
 				  xtype: 'grid',
 				  id: 'grid'
@@ -36,14 +37,10 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
     var _form = new Ext.form.FormPanel(form_config);
     var _grid = new Ext.grid.GridPanel(grid_config);
 
-    _grid.selModel.addListener('rowselect',
-    				function(sm, row, rec) {
-    				  _form.getForm().loadRecord(rec);
-    	    			  this.currId = rec.data.id;
-    				}, this);
+    _grid.selModel.addListener('rowselect', _form.rowSelectHandler);
 
     // Apply configuration.
-    Ext.apply(this, {
+    Ext.applyIf(this, {
 		tbar: [{text: 'New', handler: newAction.createDelegate(this) },
 		       {text: 'Update', handler: updateAction.createDelegate(this) },
 		       {text: 'Delete', handler: deleteAction.createDelegate(this)}
@@ -55,6 +52,11 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
     Ext.ux.GridFormBinding.superclass.initComponent.call(this, arguments);
 
     // private
+
+    function rowSelectHandler(sm, row, rec) {
+      _form.getForm().loadRecord(rec);
+      this.currId = rec.data.id;
+    }
 
     function save() {
       if(this.currId)
