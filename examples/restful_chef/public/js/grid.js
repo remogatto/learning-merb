@@ -3,7 +3,7 @@ Ext.onReady(function() {
 
   var myStore = new Ext.data.JsonStore({
 		  url: '/recipes.json',
-		  fields: ['id', 'name', 'level'],
+		  fields: ['id', 'name', 'difficulty'],
 		  autoLoad: true
   });
 
@@ -25,11 +25,13 @@ Ext.onReady(function() {
 					    autoExpandColumn: 'nome',
 					    stripeRows: true,
 					    sm: new Ext.grid.CheckboxSelectionModel(),
+
 					    columns: [
 					      sm,
 					      {header: 'Id', sortable: true, dataIndex: 'id'},
 					      {id: 'nome', header: 'Nome', sortable: true, dataIndex: 'name'}
 					    ],
+
 					    viewConfig: {
 					      emptyText: 'Your database is empty.'
 					    }
@@ -39,15 +41,24 @@ Ext.onReady(function() {
 					    title: 'Dettagli Ricetta',
 					    frame: true,
 					    defaultType: 'textfield',
+
 					    items: [
+
 					      {fieldLabel: 'Ricetta', name: 'name', allowBlank: false},
 
 					      new Ext.form.ComboBox({
+						id: 'combo',
 						mode: 'local',
-						name: 'level',
-						//editable: false,
+						name: 'difficulty',
+						editable: false,
+						selectOnFocus: true,
+						forceSelection: true,
+						triggerAction: 'all',
 						fieldLabel: 'Difficoltà',
-						store: ['Alta', 'Media', 'Bassa']
+						hiddenName: 'difficulty',
+						store: [['0', 'Bassa'], ['1', 'Media'], ['2', 'Alta']],
+						valueField: 'value',
+						displayField: 'difficulty'
 					      }),
 
 					      {hideLabel: true, hidden: true, name: 'id'}

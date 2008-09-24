@@ -24,20 +24,20 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
 				  buttons: [
 				    {text: 'Save', handler: save.createDelegate(this)},
 				    {text: 'Cancel', handler: cancel.createDelegate(this)}
-				  ],
-				  rowSelectHandler: rowSelectHandler.createDelegate(this)
+				  ]
 				});
 
     var grid_config = Ext.applyIf(this.grid,
 				{
 				  xtype: 'grid',
-				  id: 'grid'
+				  id: 'grid',
+				  rowSelectHandler: rowSelectHandler.createDelegate(this)
 				});
 
     var _form = new Ext.form.FormPanel(form_config);
     var _grid = new Ext.grid.GridPanel(grid_config);
 
-    _grid.selModel.addListener('rowselect', _form.rowSelectHandler);
+    _grid.selModel.addListener('rowselect', _grid.rowSelectHandler);
 
     // Apply configuration.
     Ext.applyIf(this, {
