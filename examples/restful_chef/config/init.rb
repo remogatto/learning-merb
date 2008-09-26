@@ -56,7 +56,8 @@ Gem.path.unshift(Merb.root / "gems")
 # dependencies "RedCloth" => "> 3.0", "ruby-aes-cext" => "= 1.0"
 
 Merb::BootLoader.before_app_loads do
-  dependency "dm-serializer"
+  dependency 'dm-serializer'
+  dependency 'dm-validations'
 end
 
 Merb::BootLoader.after_app_loads do

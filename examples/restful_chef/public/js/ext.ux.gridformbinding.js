@@ -18,7 +18,7 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
 				      _grid.store.reload();
 				    },
 				    actionfailed: function() {
-				      alert('Reload failed!');
+				      // alert('Reload failed!');
 				    }
 				  },
 				  buttons: [

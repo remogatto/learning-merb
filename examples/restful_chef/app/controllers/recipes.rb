@@ -12,8 +12,13 @@ class Recipes < Application
   end
 
   def update
-    Recipe.get!(params[:id]).update_attributes(get_params)
-    display :success => true
+    @recipe = Recipe.get!(params[:id])
+    @recipe.update_attributes(get_params)
+    if @recipe.valid?
+      display :success => true
+    else      
+      display({ :success => false, :errors => [{ :id => 'name', :msg => 'nome ricetta non valido' }] })
+    end
   end
 
   def delete

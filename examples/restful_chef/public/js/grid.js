@@ -1,6 +1,11 @@
 
 Ext.onReady(function() {
 
+  Ext.QuickTips.init();
+
+  // turn on validation errors beside the field globally
+  Ext.form.Field.prototype.msgTarget = 'side';
+
   var myStore = new Ext.data.JsonStore({
 		  url: '/recipes.json',
 		  fields: ['id', 'name', 'difficulty'],
@@ -41,10 +46,13 @@ Ext.onReady(function() {
 					    title: 'Dettagli Ricetta',
 					    frame: true,
 					    defaultType: 'textfield',
+					    defaults: {
+					      width: 200
+					    },
 
 					    items: [
 
-					      {fieldLabel: 'Ricetta', name: 'name', allowBlank: false},
+					      {fieldLabel: 'Ricetta', name: 'name'},
 
 					      new Ext.form.ComboBox({
 						id: 'combo',

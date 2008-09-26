@@ -59,6 +59,7 @@ describe Recipes  do
     it 'should update the given record' do
       Recipe.should_receive(:get!).with('1').and_return(@recipe)
       @recipe.should_receive(:update_attributes).with('name' => 'updated name')
+      @recipe.stub!(:valid?).and_return(true)
       dispatch_to(Recipes, :update, :id => '1', :name => 'updated name') do |controller|
         controller.stub!(:display)
       end
