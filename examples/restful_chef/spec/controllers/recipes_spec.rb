@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 describe Recipes  do
 
   before do
-    @recipe = mock('recipe')
+    @recipe = mock('recipe', :valid? => true)
     @property = mock('property')
     @property.stub!(:name).and_return(:id, :name, :level)
     Recipe.stub!(:properties).and_return([@property, @property, @property])
@@ -59,10 +59,27 @@ describe Recipes  do
     it 'should update the given record' do
       Recipe.should_receive(:get!).with('1').and_return(@recipe)
       @recipe.should_receive(:update_attributes).with('name' => 'updated name')
-      @recipe.stub!(:valid?).and_return(true)
       dispatch_to(Recipes, :update, :id => '1', :name => 'updated name') do |controller|
         controller.stub!(:display)
       end
+    end
+
+    it 'should return a json object as response on success' do
+      Recipe.should_receive(:get!).with('1').and_return(@recipe)
+      @recipe.should_receive(:update_attributes).with('name' => 'updated name')
+      dispatch_to(Recipes, :update, :id => '1', :name => 'updated name', :format => :json).body.should == { 
+        :success => true 
+      }.to_json
+    end
+
+    it 'should return a json object as response on error' do
+      Recipe.should_receive(:get!).with('1').and_return(@recipe)
+      @recipe.stub!(:update_attributes)
+      @recipe.stub!(:valid?).and_return(false)
+      @recipe.stub!(:errors).and_return({:name => ['error msg']})
+      dispatch_to(Recipes, :update, :id => '1', :format => :json).body.should == { 
+        :success => false, :errors => [{:id => 'name', :msg => ['error msg']}] 
+      }.to_json
     end
 
   end
