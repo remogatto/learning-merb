@@ -7,21 +7,13 @@ class Recipes < Application
   end
 
   def create
-    Recipe.new(get_params).save
-    display :success => true  
+    @recipe = Recipe.new(get_params)
+    respond(@recipe.save)
   end
 
   def update
     @recipe = Recipe.get!(params[:id])
-    @recipe.update_attributes(get_params)
-
-    if @recipe.valid?
-      display :success => true
-    else      
-      errors = @recipe.errors.collect { |field, msg| {:id => field, :msg => msg } }
-      display({ :success => false, :errors => errors })
-    end
-
+    respond(@recipe.update_attributes(get_params))
   end
 
   def delete
@@ -30,6 +22,19 @@ class Recipes < Application
   end
 
   private
+
+  def respond(is_valid)
+    is_valid ? respond_with_success : respond_with_failure
+  end
+
+  def respond_with_success
+    display :success => true  
+  end
+
+  def respond_with_failure
+    errors = @recipe.errors.collect { |field, msg| { :id => field, :msg => msg } }
+    display(:success => false, :errors => errors)
+  end
 
   # Fetch all params that are related with model properties except the id.
   def get_params

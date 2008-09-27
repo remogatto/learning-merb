@@ -39,17 +39,28 @@ describe Recipes  do
     end
 
     it 'should create a new record' do
-      @recipe = mock('recipe', :save => nil)
+      @recipe = mock('recipe', :save => true)
       Recipe.should_receive(:new).with('name' => 'New recipe', 'level' => 'medium').and_return(@recipe)
       dispatch_to(Recipes, :create, :name => 'New recipe', :level => 'medium') do |controller|
         controller.stub!(:display)
       end
     end
 
-    it 'should respond with success' do
+    it 'should respond with success if validation succeeds' do
+      @recipe = mock('recipe', :save => true)
+      Recipe.stub!(:new).and_return(@recipe)
       dispatch_to(Recipes, :create) do |controller|
         controller.should_receive(:display).with(:success => true)
       end
+    end
+
+    it 'should respond with an error json message if validation fails' do
+      @recipe = mock('recipe', :save => false)
+      @recipe.stub!(:errors).and_return({:name => ['error msg']})
+      Recipe.stub!(:new).and_return(@recipe)
+      dispatch_to(Recipes, :create, :format => :json).body.should == { 
+        :success => false, :errors => [{:id => 'name', :msg => ['error msg']}] 
+      }.to_json
     end
 
   end
@@ -57,27 +68,24 @@ describe Recipes  do
   describe 'update action' do
 
     it 'should update the given record' do
+      @recipe.should_receive(:update_attributes).with('name' => 'updated name').and_return(true)
       Recipe.should_receive(:get!).with('1').and_return(@recipe)
-      @recipe.should_receive(:update_attributes).with('name' => 'updated name')
       dispatch_to(Recipes, :update, :id => '1', :name => 'updated name') do |controller|
         controller.stub!(:display)
       end
     end
 
-    it 'should return a json object as response on success' do
-      Recipe.should_receive(:get!).with('1').and_return(@recipe)
-      @recipe.should_receive(:update_attributes).with('name' => 'updated name')
-      dispatch_to(Recipes, :update, :id => '1', :name => 'updated name', :format => :json).body.should == { 
-        :success => true 
-      }.to_json
+    it 'when validation succeeds should return a json object containing success message' do
+      @recipe.stub!(:update_attributes).and_return(true)
+      Recipe.stub!(:get!).and_return(@recipe)
+      dispatch_to(Recipes, :update, :format => :json).body.should == { :success => true }.to_json
     end
 
-    it 'should return a json object as response on error' do
-      Recipe.should_receive(:get!).with('1').and_return(@recipe)
-      @recipe.stub!(:update_attributes)
-      @recipe.stub!(:valid?).and_return(false)
+    it 'when validation fails should return a json object with field/error messages' do
+      @recipe.stub!(:update_attributes).and_return(false)
+      Recipe.stub!(:get!).and_return(@recipe)
       @recipe.stub!(:errors).and_return({:name => ['error msg']})
-      dispatch_to(Recipes, :update, :id => '1', :format => :json).body.should == { 
+      dispatch_to(Recipes, :update, :format => :json).body.should == { 
         :success => false, :errors => [{:id => 'name', :msg => ['error msg']}] 
       }.to_json
     end
