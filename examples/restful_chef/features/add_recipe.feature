@@ -5,5 +5,7 @@ Feature: Add new recipe
 
   Scenario: Add new recipe
     Given I am on grid page
-    When I click on New button
-    Then I should see an empty form
+    And I click on New button
+    And I put some text in recipe's name field
+    When I click on Save button
+    Then a new recipe should be created

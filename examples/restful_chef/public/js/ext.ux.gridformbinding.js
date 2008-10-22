@@ -22,8 +22,8 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
 				    }
 				  },
 				  buttons: [
-				    {text: 'Save', handler: save.createDelegate(this)},
-				    {text: 'Cancel', handler: cancel.createDelegate(this)}
+				    {id: 'save', text: 'Save', handler: save.createDelegate(this)},
+				    {id: 'cancel', text: 'Cancel', handler: cancel.createDelegate(this)}
 				  ]
 				});
 
