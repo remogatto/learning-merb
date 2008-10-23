@@ -27,14 +27,14 @@ Ext.onReady(function() {
 					  grid: {
 					    store: myStore,
 					    autoHeight: true,
-					    autoExpandColumn: 'nome',
+					    autoExpandColumn: 'name',
 					    stripeRows: true,
 					    sm: new Ext.grid.CheckboxSelectionModel(),
 
 					    columns: [
 					      sm,
 					      {header: 'Id', sortable: true, dataIndex: 'id'},
-					      {id: 'nome', header: 'Nome', sortable: true, dataIndex: 'name'}
+					      {id: 'name', header: 'Nome', sortable: true, dataIndex: 'name'}
 					    ],
 
 					    viewConfig: {

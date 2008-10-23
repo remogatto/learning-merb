@@ -37,5 +37,5 @@ When /^I add a (.*)$/ do |recipe|
 end
 
 Then /^I should see the (.*) on the grid$/ do |recipe|
-  @browser.get_text("//table//div[contains(@class, 'col-nome')]").should match(/#{recipe}/)
+  @browser.get_text("//table//div[contains(@class, 'col-name')]").should match(/#{recipe}/)
 end
