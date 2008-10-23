@@ -11,9 +11,10 @@ class Dashboard
   end
   
   def add_recipe(text)
-    @browser.type('q',text)   
-    @browser.click 'btnG'
-    @browser.wait_for_page_to_load
+    @browser.click 'new'
+    @browser.type 'name', text
+    @browser.click 'save'
+    sleep(2) # FIXME: find a better way to handle wait for load
   end
 end
 
@@ -31,19 +32,10 @@ Given /^I am on grid page$/ do
   @page.goto
 end
 
-Given /^I click on New button$/ do
-  @browser.click 'ext-gen24'
+When /^I add a (.*)$/ do |recipe|
+  @page.add_recipe(recipe)
 end
 
-Given /^I put some text in recipe's name field$/ do
-  @browser.type "ext-comp-1003", "testo"
-end
-
-When /^I click on Save button$/ do
-  @browser.click 'save'
-end
-
-Then /^a new recipe should be created$/ do
-  sleep(1)
-  @browser.get_body_text.should match(/testo/)
+Then /^I should see the (.*) on the grid$/ do |recipe|
+  @browser.get_text("//table//div[contains(@class, 'col-nome')]").should match(/#{recipe}/)
 end

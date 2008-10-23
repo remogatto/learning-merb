@@ -41,11 +41,12 @@ Ext.ux.GridFormBinding = Ext.extend(Ext.Panel, {
 
     // Apply configuration.
     Ext.applyIf(this, {
-		tbar: [{text: 'New', handler: newAction.createDelegate(this) },
-		       {text: 'Update', handler: updateAction.createDelegate(this) },
-		       {text: 'Delete', handler: deleteAction.createDelegate(this)}
+		  tbar: [
+		    {id: 'new', text: 'New', handler: newAction.createDelegate(this) },
+		    {id: 'update', text: 'Update', handler: updateAction.createDelegate(this) },
+		    {id: 'delete', text: 'Delete', handler: deleteAction.createDelegate(this) }
 		      ],
-		items: [_form, _grid]
+		  items: [_form, _grid]
 	      });
 
     // Call superclass constructor.
